@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Ошибка входа</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .error-box {
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .error-box h1 {
+      color: #ff4f4f;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .error-box p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .error-box a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #f47b20;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-box">
+    <h1>Слишком много попыток входа</h1>
+    <p>Вы временно заблокированы за превышение количества попыток входа.<br>Попробуйте снова через несколько минут.</p>
+    <a href="/">Вернуться</a>
+  </div>
+</body>
+</html>
